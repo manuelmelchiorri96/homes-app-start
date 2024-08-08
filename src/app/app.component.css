@@ -1,0 +1,17 @@
+:host {
+  --content-padding: 10px;
+}
+
+header {
+  display: block;
+  height: 30px;
+  padding: var(--content-padding);
+}
+
+.brand-logo {
+  margin-left: 10px;
+}
+
+.content {
+  padding: var(--content-padding);
+}
