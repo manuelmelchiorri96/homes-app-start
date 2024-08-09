@@ -3,7 +3,12 @@ import { CommonModule } from "@angular/common";
 import { ActivatedRoute } from "@angular/router";
 import { HousingLocation } from "../interfaces/housing-location";
 import { HousingService } from "../services/housing.service";
-import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
 
 @Component({
   selector: "app-details",
@@ -27,7 +32,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
     </section>
     <section class="listing-apply">
       <h2 class="section-heading">Apply now to live here</h2>
-      <form [formGroup]="applyForm" action="" (submit)="submit()">
+      <form [formGroup]="applyForm" action="" (ngSubmit)="submit()">
         <label for="first-name">First Name</label>
         <input
           type="text"
@@ -55,25 +60,24 @@ export class DetailsComponent {
   housingService = inject(HousingService);
   route: ActivatedRoute = inject(ActivatedRoute);
   applyForm = new FormGroup({
-    firstName: new FormControl(""),
-    lastName: new FormControl(""),
-    email: new FormControl(""),
+    firstName: new FormControl("", Validators.required),
+    lastName: new FormControl("", Validators.required),
+    email: new FormControl("", [Validators.required, Validators.email]),
   });
 
   constructor() {
-    const housingLocationId = Number(this.route.snapshot.params["id"]);
-    this.housingService
-      .getHousingLocationById(housingLocationId)
-      .then((location) => {
-        this.housingLocation = location;
-      });
+    const id = Number(this.route.snapshot.params["id"]);
+    this.housingService.getHousingLocationById(id).then((housingLocation) => {
+      this.housingLocation = housingLocation;
+    });
   }
 
   submit() {
     this.housingService.submit(
       this.applyForm.value.firstName ?? "",
       this.applyForm.value.lastName ?? "",
-      this.applyForm.value.email ?? ""
+      this.applyForm.value.email ?? "",
+      this.applyForm.valid ? true : false
     );
   }
 }

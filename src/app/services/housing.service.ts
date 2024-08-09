@@ -17,11 +17,17 @@ export class HousingService {
   async getHousingLocationById(
     id: number
   ): Promise<HousingLocation | undefined> {
-    const location = await fetch(`${this.url}/${id}`);
-    return (await location.json()) ?? {};
+    const housingLocation = await fetch(`${this.url}/${id}`);
+    return (await housingLocation.json()) ?? {};
   }
 
-  submit(firstName: string, lastName: string, email: string) {
-    console.log(firstName, lastName, email);
+  submit(firstName: string, lastName: string, email: string, isValid: boolean) {
+    isValid
+      ? console.log({
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+        })
+      : console.log("Form non valido");
   }
 }
